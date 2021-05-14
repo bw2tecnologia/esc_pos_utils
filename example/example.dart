@@ -53,22 +53,25 @@ Future<void> main() async {
   // Print image:
   final ByteData data = await rootBundle.load('assets/logo.png');
   final Uint8List imgBytes = data.buffer.asUint8List();
-  final Image image = decodeImage(imgBytes);
-  bytes += generator.image(image);
-  // Print image using an alternative (obsolette) command
-  // bytes += generator.imageRaster(image);
+  final Image? image = decodeImage(imgBytes);
 
-  // Print barcode
-  final List<int> barData = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 4];
-  bytes += generator.barcode(Barcode.upcA(barData));
+  if (image != null) {
+    bytes += generator.image(image);
+    // Print image using an alternative (obsolette) command
+    // bytes += generator.imageRaster(image);
 
-  // Print mixed (chinese + latin) text. Only for printers supporting Kanji mode
-  // ticket.text(
-  //   'hello ! 中文字 # world @ éphémère &',
-  //   styles: PosStyles(codeTable: PosCodeTable.westEur),
-  //   containsChinese: true,
-  // );
+    // Print barcode
+    final List<int> barData = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 4];
+    bytes += generator.barcode(Barcode.upcA(barData));
 
-  bytes += generator.feed(2);
-  bytes += generator.cut();
+    // Print mixed (chinese + latin) text. Only for printers supporting Kanji mode
+    // ticket.text(
+    //   'hello ! 中文字 # world @ éphémère &',
+    //   styles: PosStyles(codeTable: PosCodeTable.westEur),
+    //   containsChinese: true,
+    // );
+
+    bytes += generator.feed(2);
+    bytes += generator.cut();
+  }
 }
